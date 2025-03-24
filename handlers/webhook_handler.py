@@ -35,10 +35,12 @@ def webhook_handler():
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
 def handle_test_chat(message_id):
+    current_app.logger.info("Обработка тест чата")
     handle_merge_chat(message_id=message_id)
 
 def handle_merge_chat(message_id):
     thread_id = create_thread(message_id)
+    current_app.logger.info("Тред создан")
     if may_deploy():
         current_app.logger.info("Мержить можно")
         send_mr_reminder(thread_id=thread_id)
@@ -61,4 +63,9 @@ def is_merge_chat(chat_id):
 timezone = pytz.timezone("Europe/Moscow")
 now = datetime.now(timezone)
 def may_deploy():
-    return 0 <= now.weekday() <= 3 and time(11, 0) <= now.time() < time(16, 0)  
+    current_app.logger.info("Метод проверки можно ли мержить")
+    isWeekDay = 0 <= now.weekday() <= 3
+    isDeployTime = time(11, 0) <= now.time() < time(16, 0)
+    current_app.logger.info(f"Проверка дня недели: {isWeekDay}")
+    current_app.logger.info(f"Проверка времени: {isDeployTime}")
+    return isWeekDay and isDeployTime

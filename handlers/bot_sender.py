@@ -84,8 +84,9 @@ def send_interface_standup_reminder():
 
 
 def create_thread(message_id):
+    current_app.logger.info("Вызов метода создания треда")
     url = f"https://api.pachca.com/api/shared/v1//messages/{message_id}/thread"
-    headers = {Config.API_TOKEN}
+    headers = Config.HEADERS
     
     try:
         response = requests.post(url, headers=headers, timeout=5)
